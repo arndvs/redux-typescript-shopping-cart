@@ -2,18 +2,18 @@ import React from "react";
 import classNames from "classnames";
 import { useAppSelector, useAppDispatch } from "../../app/hooks"; // Import the useAppSelector and useAppDispatch hooks
 import {
-  getTotalPrice,
-  removeFromCart,
-  updateQuantity,
-  checkoutCart,
+  getTotalPrice, // Import the getTotalPrice selector from the cartSlice
+  removeFromCart, // Import the removeFromCart action creator from the cartSlice
+  updateQuantity, // Import the updateQuantity action creator from the cartSlice
+  checkoutCart, // Import the checkoutCart action creator from the cartSlice
 } from "./cartSlice";
 import styles from "./Cart.module.css";
 
 export function Cart() {
   const dispatch = useAppDispatch();
-  const products = useAppSelector((state) => state.products.products); // Use the useAppSelector hook to get the products from the store
-  const items = useAppSelector((state) => state.cart.items); //
-  const totalPrice = useAppSelector(getTotalPrice);
+  const products = useAppSelector((state) => state.products.products); // Use the useAppSelector hook to get the products state from the store
+  const items = useAppSelector((state) => state.cart.items); // Use the useAppSelector hook to get the items state from the cart
+  const totalPrice = useAppSelector(getTotalPrice); // Use the useAppSelector hook to get the getTotalPrice selector from the cart
   const checkoutState = useAppSelector((state) => state.cart.checkoutState);
   const errorMessage = useAppSelector((state) => state.cart.errorMessage);
 
@@ -80,7 +80,7 @@ export function Cart() {
           <tr>
             <td>Total</td>
             <td></td>
-            <td className={styles.total}>${totalPrice}</td>
+            <td className={styles.total}>${totalPrice}</td> {/* Use the totalPrice selector to render the total price */}
             <td></td>
           </tr>
         </tfoot>
