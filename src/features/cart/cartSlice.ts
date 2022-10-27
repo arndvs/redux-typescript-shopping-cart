@@ -7,6 +7,7 @@ import {
 import { checkout, CartItems } from "../../app/api";
 import type { RootState } from "../../app/store"; // import the RootState type from the store.ts file
 
+// Define a type for the slice state CheckoutState to pass into CartState and initialState
 type CheckoutState = "LOADING" | "READY" | "ERROR";
 
 // CartState is the type of the state slice managed by this reducer and describes
@@ -16,7 +17,7 @@ export interface CartState {
   // of productID of type string and a value of type number tells typescript that
   // our items property is going to be an object where the keys are productID strings
   // and the values are numbers
-  checkoutState: CheckoutState;
+  checkoutState: CheckoutState; // checkoutState is a property of type CheckoutState
   errorMessage: string;
 }
 
@@ -43,6 +44,10 @@ export const checkoutCart = createAsyncThunk("cart/checkout", async (_, thunkAPI
 const cartSlice = createSlice({
   name: "cart",
   initialState,
+
+  // reducers object provides syntax for creating reducer functions and generating associated actions in a single step
+  // to separate the logic of the reducer function from the logic of the action creator function, to handle other actions,
+  // or create custom action creators - then use an extraReducers function below the reducers
   reducers: {
     // the first reducer method is addProductToCart
     addToCart(state, action: PayloadAction<string>) { // method takes state and action
@@ -71,10 +76,21 @@ const cartSlice = createSlice({
     },
   },
 
+
+    // extraReducers is a function that takes in an argument called builder
   extraReducers: (builder) => {
-    builder.addCase(checkoutCart.pending, (state) => {
-      state.checkoutState = "LOADING";
+
+
+    builder.addCase(checkoutCart.pending, (state) => { // builder argument is similar functionality to
+        // a switch statement commonly used in reducers. Instead of switching through cases by action type,
+        // the builder argument uses a method called addCase to define the casses.
+        // addCase takes in a type checkoutCart.pending, and the second argument is a reducer function which is state and action
+      state.checkoutState = "LOADING"; // set the checkoutState property of the state to "LOADING"
     });
+    // now any time the checkoutCart.pending action is dispatched, the reducer will be called with the state and action
+
+
+
     builder.addCase(
       checkoutCart.fulfilled,
       (state, action: PayloadAction<{ success: boolean }>) => {

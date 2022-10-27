@@ -14,7 +14,7 @@ export function Cart() {
   const products = useAppSelector((state) => state.products.products); // Use the useAppSelector hook to get the products state from the store
   const items = useAppSelector((state) => state.cart.items); // Use the useAppSelector hook to get the items state from the cart
   const totalPrice = useAppSelector(getTotalPrice); // Use the useAppSelector hook to get the getTotalPrice selector from the cart
-  const checkoutState = useAppSelector((state) => state.cart.checkoutState);
+  const checkoutState = useAppSelector((state) => state.cart.checkoutState); // Use the useAppSelector hook to get the checkoutState state from the cart
   const errorMessage = useAppSelector((state) => state.cart.errorMessage);
 
 
@@ -32,24 +32,25 @@ export function Cart() {
   }
 
 
-
+// onCheckout takes argument e, which is of type React form event, and pass into it the type HTMLFormElement, which is the type of the form element.
   function onCheckout(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    dispatch(checkoutCart());
+    e.preventDefault(); // prevents the form from submitting
+    dispatch(checkoutCart()); // dispatch the checkoutCart action creator
   }
 
 
-
+// Render the cart component classes styles
+// provides a single classname string for the cart component based on the checkoutState
   const tableClasses = classNames({
     [styles.table]: true,
-    [styles.checkoutError]: checkoutState === "ERROR",
+    [styles.checkoutError]: checkoutState === "ERROR", // computed property syntax for the checkoutError class
     [styles.checkoutLoading]: checkoutState === "LOADING",
   });
 
   return (
     <main className="page">
       <h1>Shopping Cart</h1>
-      <table className={tableClasses}>
+      <table className={tableClasses}>  {/* render the tableClasses classNames*/}
         <thead>
           <tr>
             <th>Product</th>
@@ -61,8 +62,8 @@ export function Cart() {
         <tbody>
           {Object.entries(items).map(([id, quantity]) => ( // Use Object.entries to iterate over the items
           // object and destructure the key and value. Object.entries takes an object and splits it into an
-          // array of arrays, where each array contains a key and value. In this case, the key is the id
-          // and the value is the quantity. Loop over them and convert them into a table row.
+          // array of arrays, where each array contains a key and value. In this case, the key is the product id
+          // and the value is the product quantity. Loop over them and convert them into a table row.
             <tr key={id}>
               <td>{products[id].name}</td> {/* Use the products object to get the product name */}
               <td>
@@ -98,7 +99,7 @@ export function Cart() {
           </tr>
         </tfoot>
       </table>
-      <form onSubmit={onCheckout}>
+      <form onSubmit={onCheckout}>  {/* onSubmit event handler, calls onCheckout function and sets it to the loading state */}
         {checkoutState === "ERROR" && errorMessage ? (
           <p className={styles.errorBox}>{errorMessage}</p>
         ) : null}
