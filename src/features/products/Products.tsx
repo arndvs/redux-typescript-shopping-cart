@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"; // useState unnecessary
 import { useAppDispatch, useAppSelector } from "../../app/hooks"; // import the useAppDispatch and useAppSelector hooks
 import { receivedProducts } from "./productsSlice"; // import the receivedProducts action creator from the productSlice
-import { addToCart } from "../cart/cartSlice";
+import { addToCart } from "../cart/cartSlice"; // import the addToCart action creator from the cartSlice
 import { getProducts } from "../../app/api"; // products API function
 import styles from "./Products.module.css";
 
@@ -35,7 +35,7 @@ export function Products() {
                 <h1>{product.name}</h1>
                 <p>{product.description}</p>
                 <p>${product.price}</p>
-                <button onClick={() => dispatch(addToCart(product.id))}>
+                <button onClick={() => dispatch(addToCart(product.id))}> {/* onclick handler arrow function dispatch addToCart action creator, pass in the current product.id */}
                   Add to Cart 🛒
                 </button>
               </div>
