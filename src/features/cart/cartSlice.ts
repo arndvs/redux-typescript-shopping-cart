@@ -44,6 +44,7 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    // the first reducer method is addProductToCart
     addToCart(state, action: PayloadAction<string>) { // method takes state and action
         // with type of PayloadAction with a type of string which will be the id of the
         // product added to the cart
@@ -53,9 +54,13 @@ const cartSlice = createSlice({
         state.items[action.payload] = 1; // add one to quantity of the product id key
       }
     },
-    removeFromCart(state, action: PayloadAction<string>) {
-      delete state.items[action.payload];
+    // the second reducer method is removeFromCart
+    removeFromCart(state, action: PayloadAction<string>) { // method takes 2 arguments,
+        // state and action of type PayloadAction, which passes in a payload of type string
+        // for the id
+      delete state.items[action.payload]; // delete the product id key from the items object
     },
+    // the third reducer method is clearCart
     updateQuantity(
       state,
       action: PayloadAction<{ id: string; quantity: number }>
@@ -64,6 +69,7 @@ const cartSlice = createSlice({
       state.items[id] = quantity;
     },
   },
+
   extraReducers: (builder) => {
     builder.addCase(checkoutCart.pending, (state) => {
       state.checkoutState = "LOADING";
@@ -140,10 +146,9 @@ export const getMemoizedNumItems = createSelector(
 );
 
 
-
-
 // CreateSelector is a function that lets us create memoized selectors that relies on 2 pieces of state, rather than just one
 export const getTotalPrice = createSelector(
+// you could explicitly type createSelector<RootState, any, any, string> but it is not necessary when adding type RootState to the function i.e. (state: RootState)
   (state: RootState) => state.cart.items, // takes in the root state of the cart items
   (state: RootState) => state.products.products, // takes in the root state of the products
   (items, products) => { // pass in a function that takes items in as it's first argument and products as it's second argument

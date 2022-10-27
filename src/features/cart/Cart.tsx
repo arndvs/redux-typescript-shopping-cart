@@ -10,7 +10,7 @@ import {
 import styles from "./Cart.module.css";
 
 export function Cart() {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch(); // Use the useAppDispatch hook to get the dispatch function
   const products = useAppSelector((state) => state.products.products); // Use the useAppSelector hook to get the products state from the store
   const items = useAppSelector((state) => state.cart.items); // Use the useAppSelector hook to get the items state from the cart
   const totalPrice = useAppSelector(getTotalPrice); // Use the useAppSelector hook to get the getTotalPrice selector from the cart
@@ -66,7 +66,8 @@ export function Cart() {
               <td>${products[id].price}</td>
               <td>
                 <button
-                  onClick={() => dispatch(removeFromCart(id))}
+                  onClick={() => dispatch(removeFromCart(id))} // onclick handler calls dispatch with the
+                  // removeFromCart action creator, and passes in the id
                   aria-label={`Remove ${products[id].name} from Shopping Cart`}
                 //   template literal to add the product name to the aria-label
                 >
