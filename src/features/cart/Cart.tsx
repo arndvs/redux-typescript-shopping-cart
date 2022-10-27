@@ -17,18 +17,28 @@ export function Cart() {
   const checkoutState = useAppSelector((state) => state.cart.checkoutState);
   const errorMessage = useAppSelector((state) => state.cart.errorMessage);
 
+
+// onQuantityChanged method for handling onBlur, takes 2 arguments
+// The first is e, which is a React focus event, and pass into it the type HTMLInputElement, which is the type of the input element.
+// The second argument is the id of the product, which is type string.
   function onQuantityChanged(
     e: React.FocusEvent<HTMLInputElement>,
     id: string
-  ) {
-    const quantity = Number(e.target.value) || 0;
+  ) { //
+    const quantity = Number(e.target.value) || 0; // create variable named quantity, set it to a variable called Number, that takes the
+    // e.target.value which is a string and converts it to a number. If it's not a number, it will return 0.
+    // Then dispatch the updateQuantity action creator, passing in the id and the value of the input element
     dispatch(updateQuantity({ id, quantity }));
   }
+
+
 
   function onCheckout(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     dispatch(checkoutCart());
   }
+
+
 
   const tableClasses = classNames({
     [styles.table]: true,
@@ -60,16 +70,18 @@ export function Cart() {
                   type="text"
                   className={styles.input}
                   defaultValue={quantity}
-                  onBlur={(e) => onQuantityChanged(e, id)} // Pass the id to the onQuantityChanged function
+                  onBlur={(e) => onQuantityChanged(e, id)} // onBlur event handler, takes the focus event, pass it to onQuantityChanged, along with the id
+                  // Pass the id to the onQuantityChanged function
+                  // this allows to update state of from the input elements as well as the add to cart buttons.
                 />
               </td>
               <td>${products[id].price}</td>
               <td>
                 <button
-                  onClick={() => dispatch(removeFromCart(id))} // onclick handler calls dispatch with the
-                  // removeFromCart action creator, and passes in the id
+                  // onclick handler calls dispatch with the removeFromCart action creator, and passes in the id
+                  onClick={() => dispatch(removeFromCart(id))}
+                  //   template literal to add the product name to the aria-label
                   aria-label={`Remove ${products[id].name} from Shopping Cart`}
-                //   template literal to add the product name to the aria-label
                 >
                   X
                 </button>
