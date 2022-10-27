@@ -8,8 +8,14 @@ import { checkout, CartItems } from "../../app/api";
 import type { RootState } from "../../app/store";
 
 type CheckoutState = "LOADING" | "READY" | "ERROR";
+
+// CartState is the type of the state slice managed by this reducer and describes
+// what the data is going to look like.
 export interface CartState {
-  items: { [productID: string]: number };
+  items: { [productID: string]: number }; // key of items has an object with a key
+  // of productID of type string and a value of type number tells typescript that
+  // our items property is going to be an object where the keys are productID strings
+  // and the values are numbers
   checkoutState: CheckoutState;
   errorMessage: string;
 }
@@ -27,6 +33,8 @@ export const checkoutCart = createAsyncThunk("cart/checkout", async (_, thunkAPI
   return response;
 });
 
+// createSlice is a function that contains an object takes a name, an initialstate, a reducers object full of reducer functions, and a slice name,
+// and automatically generates action creators and action types that correspond to the reducers and state.
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -73,6 +81,11 @@ const cartSlice = createSlice({
 });
 
 export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
+
+// exporting the cartSlice.reducer function processes the actions passed
+// into the redux store, and returns an updated version of the state
+// each slice gets its own reducer function that is responsible for
+// updating the state for that part of the data
 export default cartSlice.reducer;
 
 export function getNumItems(state: RootState) {
