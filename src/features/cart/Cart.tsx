@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks"; // Import the useAppSelector and useAppDispatch hooks
 import {
   getTotalPrice,
   removeFromCart,
@@ -11,8 +11,8 @@ import styles from "./Cart.module.css";
 
 export function Cart() {
   const dispatch = useAppDispatch();
-  const products = useAppSelector((state) => state.products.products);
-  const items = useAppSelector((state) => state.cart.items);
+  const products = useAppSelector((state) => state.products.products); // Use the useAppSelector hook to get the products from the store
+  const items = useAppSelector((state) => state.cart.items); //
   const totalPrice = useAppSelector(getTotalPrice);
   const checkoutState = useAppSelector((state) => state.cart.checkoutState);
   const errorMessage = useAppSelector((state) => state.cart.errorMessage);
@@ -49,15 +49,18 @@ export function Cart() {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(items).map(([id, quantity]) => (
+          {Object.entries(items).map(([id, quantity]) => ( // Use Object.entries to iterate over the items
+          // object and destructure the key and value. Object.entries takes an object and splits it into an
+          // array of arrays, where each array contains a key and value. In this case, the key is the id
+          // and the value is the quantity. Loop over them and convert them into a table row.
             <tr key={id}>
-              <td>{products[id].name}</td>
+              <td>{products[id].name}</td> {/* Use the products object to get the product name */}
               <td>
                 <input
                   type="text"
                   className={styles.input}
                   defaultValue={quantity}
-                  onBlur={(e) => onQuantityChanged(e, id)}
+                  onBlur={(e) => onQuantityChanged(e, id)} // Pass the id to the onQuantityChanged function
                 />
               </td>
               <td>${products[id].price}</td>
@@ -65,6 +68,7 @@ export function Cart() {
                 <button
                   onClick={() => dispatch(removeFromCart(id))}
                   aria-label={`Remove ${products[id].name} from Shopping Cart`}
+                //   template literal to add the product name to the aria-label
                 >
                   X
                 </button>
