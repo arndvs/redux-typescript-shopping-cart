@@ -1,10 +1,10 @@
 import {
   createSlice,
-  createAsyncThunk,
+  createAsyncThunk, // Thunk to dipatch async actions and handle loading state
   createSelector, // createSelector is a function that lets us create memoized selectors
   PayloadAction, // PayloadAction is a generic Redux type that takes in an argument of the type of the data that the action payload will contain
 } from "@reduxjs/toolkit";
-import { checkout, CartItems } from "../../app/api";
+import { checkout, CartItems } from "../../app/api"; // checkout is a function that makes a fake API call to simulate a checkout process
 import type { RootState } from "../../app/store"; // import the RootState type from the store.ts file
 
 // Define a type for the slice state CheckoutState to pass into CartState and initialState
@@ -27,14 +27,23 @@ const initialState: CartState = {
   errorMessage: "",
 };
 
-export const checkoutCart = createAsyncThunk("cart/checkout", async (_, thunkAPI) => {
+// reducers can only dispatch actions objects into the redux store. Redux Thunk middleware can dispatch a functions instead objects.
+// These functions can dispatch multiple actions and can be used to make asynchronous requests.
+// createAsyncThunk is a middleware redux thunk function that accepts a string argument for the action type
+export const checkoutCart = createAsyncThunk("cart/checkout", async (_, thunkAPI) => { // thunkAPI is an object that contains
+    // the dispatch method, pass in for the action type "cart/checkout". The second argument is an ascync function that takes in two arguments. The first is the argument items cart items, and
   const state = thunkAPI.getState() as RootState;
   const items = state.cart.items;
-  const response = await checkout(items);
+  const response = await checkout(items); // checkout awaits and returns the checkout items
   return response;
 });
 
-
+// above - using AsyncThunk to create an action creator named checkoutCart that dispatches actions based on the reponse of the checkout API call.
+// Those three actions i.e pending, fulfilled, and rejected are handled as cases in the extraReducers.
+// AsyncThunk generates and dispatches the pending, fulfilled, and rejected actions automatically.
+//  -- the pending action is dispatched when the checkoutCart action creator is called
+//  -- the fulfilled action is dispatched when the checkoutCart action creator is called and the API call is successful
+//  -- the rejected action is dispatched when the checkoutCart action creator is called and the API call is unsuccessful
 
 // Slices
 
@@ -77,22 +86,22 @@ const cartSlice = createSlice({
   },
 
 
-    // extraReducers is a function that takes in an argument called builder
+   // extraReducers is a function that takes in an argument called builder that handles custom actions
   extraReducers: (builder) => {
-
-
-    builder.addCase(checkoutCart.pending, (state) => { // builder argument is similar functionality to
+    // first extra reducer is checkoutCart.pending (switch case 1)
+    builder.addCase(checkoutCart.pending, (state) => { // builder API is similar functionality to
         // a switch statement commonly used in reducers. Instead of switching through cases by action type,
         // the builder argument uses a method called addCase to define the casses.
         // addCase takes in a type checkoutCart.pending, and the second argument is a reducer function which is state and action
+        // async thunk generates a pending action when the async function is called
       state.checkoutState = "LOADING"; // set the checkoutState property of the state to "LOADING"
     });
-    // now any time the checkoutCart.pending action is dispatched, the reducer will be called with the state and action
+    // now any time a component dispatches the checkoutCart.pending action, the reducer will be called with the state and action
 
-
-
+ // second extra reducer is checkoutCart.fulfilled (switch case 2)
     builder.addCase(
-      checkoutCart.fulfilled,
+      checkoutCart.fulfilled, // addCase takes in a type checkoutCart.fulfilled
+       // async thunk generates a fulfilled action when the async function is called
       (state, action: PayloadAction<{ success: boolean }>) => {
         const { success } = action.payload;
         if (success) {
@@ -103,8 +112,12 @@ const cartSlice = createSlice({
         }
       }
     );
+
+    // third extra reducer is checkoutCart.rejected (switch case 3)
     builder.addCase(checkoutCart.rejected, (state, action) => {
+     // async thunk generates a rejected state action when the async function is called
       state.checkoutState = "ERROR";
+      // called any time the promise returned by the async function is rejected
       state.errorMessage = action.error.message || "";
     });
   },
@@ -128,7 +141,6 @@ export default cartSlice.reducer;
 
 
 // Selectors
-
 
 // getNumItems is a selector function that takes in the state and returns the number of items in the cart
 export function getNumItems(state: RootState) { // function takes in state of type RootState (imported from store.ts)

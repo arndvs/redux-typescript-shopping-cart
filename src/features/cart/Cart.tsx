@@ -32,7 +32,7 @@ export function Cart() {
   }
 
 
-// onCheckout takes argument e, which is of type React form event, and pass into it the type HTMLFormElement, which is the type of the form element.
+   // onCheckout takes argument e, which is of type React form event, and pass into it the type HTMLFormElement, which is the type of the form element.
   function onCheckout(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); // prevents the form from submitting
     dispatch(checkoutCart()); // dispatch the checkoutCart action creator
