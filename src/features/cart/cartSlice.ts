@@ -22,9 +22,9 @@ export interface CartState {
 }
 
 const initialState: CartState = {
-  items: {},
-  checkoutState: "READY",
-  errorMessage: "",
+  items: {}, // items is an empty object
+  checkoutState: "READY", // checkoutState is set to "READY" by default
+  errorMessage: "", // errorMessage is a property of type string
 };
 
 // reducers can only dispatch actions objects into the redux store. Redux Thunk middleware can dispatch a functions instead objects.
@@ -114,11 +114,12 @@ const cartSlice = createSlice({
     );
 
     // third extra reducer is checkoutCart.rejected (switch case 3)
-    builder.addCase(checkoutCart.rejected, (state, action) => {
+    builder.addCase(checkoutCart.rejected, (state, action) => {  // action specifically for error thunk action = action.error, used to set the state.errorMessage
+        // any time there's an error in an async thunk action, the error is passed in as the action.error property with error.message
      // async thunk generates a rejected state action when the async function is called
       state.checkoutState = "ERROR";
       // called any time the promise returned by the async function is rejected
-      state.errorMessage = action.error.message || "";
+      state.errorMessage = action.error.message || ""; // set the errorMessage property of the state to the error message
     });
   },
 });

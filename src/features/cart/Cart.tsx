@@ -12,10 +12,10 @@ import styles from "./Cart.module.css";
 export function Cart() {
   const dispatch = useAppDispatch(); // Use the useAppDispatch hook to get the dispatch function
   const products = useAppSelector((state) => state.products.products); // Use the useAppSelector hook to get the products state from the store
-  const items = useAppSelector((state) => state.cart.items); // Use the useAppSelector hook to get the items state from the cart
-  const totalPrice = useAppSelector(getTotalPrice); // Use the useAppSelector hook to get the getTotalPrice selector from the cart
-  const checkoutState = useAppSelector((state) => state.cart.checkoutState); // Use the useAppSelector hook to get the checkoutState state from the cart
-  const errorMessage = useAppSelector((state) => state.cart.errorMessage);
+  const items = useAppSelector((state) => state.cart.items); // Use the useAppSelector hook to get the items state from the cartSlice
+  const totalPrice = useAppSelector(getTotalPrice); // Use the useAppSelector hook to get the getTotalPrice selector from the cartSlice
+  const checkoutState = useAppSelector((state) => state.cart.checkoutState); // Use the useAppSelector hook to get the checkoutState state from the cartSlice
+  const errorMessage = useAppSelector((state) => state.cart.errorMessage); // Use the useAppSelector hook to get the thunk errorMessage state from the cartSlice
 
 
 // onQuantityChanged method for handling onBlur, takes 2 arguments
@@ -100,9 +100,9 @@ export function Cart() {
         </tfoot>
       </table>
       <form onSubmit={onCheckout}>  {/* onSubmit event handler, calls onCheckout function and sets it to the loading state */}
-        {checkoutState === "ERROR" && errorMessage ? (
-          <p className={styles.errorBox}>{errorMessage}</p>
-        ) : null}
+        {checkoutState === "ERROR" && errorMessage ? ( // if checkoutState is in the error state, render the errorMessage from cartSlice
+          <p className={styles.errorBox}>{errorMessage}</p> // render the errorBox class
+        ) : null}  {/* if checkoutState is not in the error state, render nothing */}
         <button className={styles.button} type="submit">
           Checkout
         </button>
