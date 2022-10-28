@@ -32,8 +32,8 @@ const initialState: CartState = {
 // createAsyncThunk is a middleware redux thunk function that accepts a string argument for the action type
 export const checkoutCart = createAsyncThunk("cart/checkout", async (_, thunkAPI) => { // thunkAPI is an object that contains
     // the dispatch method, pass in for the action type "cart/checkout". The second argument is an ascync function that takes in two arguments. The first is the argument items cart items, and
-  const state = thunkAPI.getState() as RootState;
-  const items = state.cart.items;
+  const state = thunkAPI.getState() as RootState; // getState is a method that returns the current state of the redux store. The state is casted as a RootState type
+  const items = state.cart.items; // get the items from the cart state
   const response = await checkout(items); // checkout awaits and returns the checkout items
   return response;
 });
@@ -86,6 +86,8 @@ const cartSlice = createSlice({
   },
 
 
+// Builders
+
    // extraReducers is a function that takes in an argument called builder that handles custom actions
   extraReducers: (builder) => {
     // first extra reducer is checkoutCart.pending (switch case 1)
@@ -102,14 +104,15 @@ const cartSlice = createSlice({
     builder.addCase(
       checkoutCart.fulfilled, // addCase takes in a type checkoutCart.fulfilled
        // async thunk generates a fulfilled action when the async function is called
-      (state, action: PayloadAction<{ success: boolean }>) => {
-        const { success } = action.payload;
-        if (success) {
-          state.checkoutState = "READY";
-          state.items = {};
-        } else {
-          state.checkoutState = "ERROR";
+      (state, action: PayloadAction<{ success: boolean }>) => { // first argument is state, second argument is action of type PayloadAction with an object with success key of type boolean
+        const { success } = action.payload; // set success equal to the action payload
+        if (success) { // if success is true
+          state.checkoutState = "READY"; // set the checkoutState property of the state to "READY"
+          state.items = {}; // set the items property of the state to an empty object
+        } else { // if success is false
+          state.checkoutState = "ERROR"; // set the checkoutState property of the state to "ERROR"
         }
+        // after checking out is complete, the checkoutState is set to "READY" and the items object is set to an empty object, emptying the cart
       }
     );
 
